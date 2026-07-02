@@ -1,10 +1,10 @@
-# 📅 Week 1 – Introduction to Generative AI
+# 📅 Week 1 – Introduction to Modern AI
 
 ## Overview
 
-Week 1 focused on understanding the fundamentals of the Generative AI ecosystem and setting up the development environment required for building AI applications.
+Week 1 focused on understanding the fundamentals of the modern AI ecosystem and setting up the development environment required for building AI applications.
 
-The primary objective was to gain a strong theoretical foundation before moving on to practical implementation in the upcoming weeks.
+The primary objective was to build a strong theoretical foundation in **Generative AI** and **Agentic AI** before moving on to practical implementation in the upcoming weeks of the internship.
 
 ---
 
@@ -27,19 +27,21 @@ The primary objective was to gain a strong theoretical foundation before moving 
 ```text
 week1/
 │
+├── README.md
 ├── Prompt_Engineering/
 ├── GenAI_Documentation/
-├── Setup_Guide/
-└── Resources/
+└── Setup_Guide/
 ```
 
 ---
 
 # 📖 Contents
 
-## Prompt Engineering
+## 📌 Prompt Engineering
 
-This folder contains hands-on exercises demonstrating different prompting techniques using Google Gemini, including:
+This folder contains hands-on exercises demonstrating different prompting techniques using Google Gemini.
+
+Topics covered include:
 
 * Simple Prompting
 * Bad vs Good Prompt Comparison
@@ -51,9 +53,9 @@ This folder contains hands-on exercises demonstrating different prompting techni
 
 ---
 
-## GenAI Documentation
+## 📘 GenAI Documentation
 
-This folder contains short notes covering the core concepts of the Generative AI ecosystem.
+This folder contains concise documentation covering the core concepts of modern AI.
 
 Topics include:
 
@@ -69,31 +71,31 @@ Topics include:
 
 ---
 
-## Setup Guide
+## ⚙️ Setup Guide
 
-This section contains the development environment setup required for the internship, including Python, Git, VS Code, virtual environments, and AI development tools.
+This folder contains documentation for setting up the AI development environment, including:
 
----
-
-## Resources
-
-Contains useful references, documentation, and learning materials used during Week 1.
+* Python installation
+* Git & GitHub setup
+* Visual Studio Code configuration
+* Virtual environment setup
+* AI library installation
 
 ---
 
 # 🛠️ Tools Used
 
 * Python
-* Visual Studio Code
 * Git & GitHub
+* Visual Studio Code
 * Google Gemini
+* Ollama
 * LangChain
 * LangGraph
 * CrewAI
-* Ollama
 
 ---
 
 # ✅ Week 1 Outcome
 
-By the end of Week 1, I gained a foundational understanding of the Generative AI ecosystem, completed practical Prompt Engineering exercises, documented key AI concepts, and prepared my development environment for building AI-powered applications in the following weeks.
+By the end of Week 1, I developed a foundational understanding of the Generative AI ecosystem, completed hands-on Prompt Engineering exercises, documented key AI concepts, and configured the development environment required for building AI-powered applications in the upcoming weeks of the internship.
