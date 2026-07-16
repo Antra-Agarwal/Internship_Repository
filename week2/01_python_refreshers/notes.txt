@@ -1,0 +1,4 @@
+Python
+LangChain
+Google Gemini
+Generative AI

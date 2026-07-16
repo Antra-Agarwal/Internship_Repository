@@ -1,0 +1,3 @@
+Welcome to Week 2 Internship!
+Learning Generative AI with Gemini.
+This line was appended later.
