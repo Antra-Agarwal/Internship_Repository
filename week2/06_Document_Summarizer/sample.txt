@@ -1,0 +1,13 @@
+Artificial Intelligence (AI) is a branch of computer science that enables
+machines to perform tasks that usually require human intelligence.
+These tasks include learning, reasoning, problem-solving,
+understanding language, and recognizing patterns.
+
+Machine Learning is a subset of AI where computers learn from data
+instead of being explicitly programmed. Deep Learning is a further
+subset of Machine Learning that uses artificial neural networks to
+solve complex problems such as image recognition and natural language
+processing.
+
+AI is widely used in healthcare, finance, education,
+transportation, and many other industries.
