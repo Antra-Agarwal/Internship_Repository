@@ -2,9 +2,9 @@
 
 Welcome to my internship repository!
 
-This repository documents my learning journey and work completed during my internship at **Cognitio Analytics**, where I am working with the **Software Team**. It serves as a collection of technical documentation, practical exercises, environment setup guides, and AI projects developed throughout the internship.
+This repository documents my learning journey and work completed during my internship at **Cognitio Analytics**, where I am working with the **Software Team**.
 
-The repository focuses on modern AI technologies, including **Generative AI**, **Agentic AI**, and the tools and frameworks used to build intelligent applications.
+It contains technical documentation, hands-on exercises, AI applications, and supporting resources developed throughout the internship. As the internship progresses, this repository will continue to expand with new projects, documentation, and practical implementations.
 
 ---
 
@@ -12,15 +12,14 @@ The repository focuses on modern AI technologies, including **Generative AI**, *
 
 The primary goals of this internship are to:
 
-* Build a strong foundation in Artificial Intelligence.
-* Learn the concepts of Generative AI and Agentic AI.
-* Understand Large Language Models (LLMs).
-* Explore Prompt Engineering techniques.
-* Study Retrieval-Augmented Generation (RAG).
-* Learn Embeddings and Vector Databases.
-* Understand AI Agents and the Model Context Protocol (MCP).
-* Build AI-powered applications using modern frameworks.
-* Gain hands-on experience by working on real-world software projects.
+- Build a strong foundation in Artificial Intelligence.
+- Learn the concepts of Generative AI and Agentic AI.
+- Understand Large Language Models (LLMs).
+- Explore Prompt Engineering techniques.
+- Study Retrieval-Augmented Generation (RAG).
+- Learn Embeddings and Vector Databases.
+- Build AI-powered applications using modern AI frameworks.
+- Gain hands-on experience through real-world software development.
 
 ---
 
@@ -31,110 +30,153 @@ Internship/
 │
 ├── README.md
 ├── .gitignore
+├── .env
+├── requirements.txt
+├── venv/
 │
-└── week1/
+├── week1/
+│   ├── README.md
+│   ├── Prompt_Engineering/
+│   ├── GenAI_Documentation/
+│   └── Setup_Guide/
+│
+└── week2/
     ├── README.md
-    ├── Prompt_Engineering/
-    ├── GenAI_Documentation/
-    └── Setup_Guide/
+    ├── requirements.txt
+    ├── 01_python_refreshers/
+    ├── 02_Gemini_API/
+    ├── 03_LangChain/
+    ├── 04_AI_QA_Assistant/
+    ├── 05_AI_Email_Generator/
+    ├── 06_Document_Summarizer/
+    └── docs/
 ```
 
-> 📌 The repository will continue to grow as new assignments, documentation, and projects are completed during the internship.
+> 📌 The repository will continue to grow as additional weeks and projects are completed.
 
 ---
 
-# 📖 Current Contents
+# 📅 Internship Progress
 
-## 📌 Prompt Engineering
+## ✅ Week 1 — Foundations of Generative AI
 
-Hands-on exercises demonstrating various prompting techniques using **Google Gemini**, including:
+Week 1 focused on understanding the core concepts of Generative AI and preparing the development environment.
 
-* Simple Prompting
-* Bad vs Good Prompt Comparison
-* Role Prompting
-* Structured Output Prompting
-* Few-Shot Prompting
-* Code Generation
-* Creative Prompting
+Topics covered include:
 
----
+- Prompt Engineering
+- Generative AI Fundamentals
+- Large Language Models (LLMs)
+- Retrieval-Augmented Generation (RAG)
+- Embeddings
+- Vector Databases
+- AI Agents
+- Model Context Protocol (MCP)
 
-## 📘 Generative AI Documentation
+The week also included development environment setup using Python, Git, VS Code, Google Gemini, Ollama, LangChain, LangGraph, and CrewAI.
 
-Concise technical notes covering the core concepts of the Generative AI ecosystem.
-
-Topics include:
-
-* Generative AI
-* Large Language Models (LLMs)
-* Prompt Engineering
-* Retrieval-Augmented Generation (RAG)
-* Embeddings
-* Vector Databases
-* AI Agents
-* Model Context Protocol (MCP)
-* Real-World Use Cases
+📄 See **`week1/README.md`** for complete details.
 
 ---
 
-## ⚙️ Development Environment Setup
+## ✅ Week 2 — Building First GenAI Applications
 
-Documentation for setting up the development environment, including:
+Week 2 focused on applying AI concepts by building practical applications using **Google Gemini** and **LangChain**.
 
-* Python
-* Git & GitHub
-* Visual Studio Code
-* Google Gemini
-* Ollama
-* LangChain
-* LangGraph
-* CrewAI
+Topics covered include:
+
+- Advanced Python Refresher
+- Working with LLM APIs
+- LangChain Fundamentals
+- Prompt Templates
+- Output Parsers
+- Chains
+- Chat Models
+
+Three AI-powered applications were developed:
+
+- 🤖 AI Q&A Assistant
+- 📧 AI Email Generator
+- 📄 AI Document Summarizer
+
+Additional documentation includes:
+
+- Reading Notes
+- Prompt Design
+- Challenges & Learnings
+
+📄 See **`week2/README.md`** for complete details.
 
 ---
 
 # 🛠️ Technologies & Tools
 
-* Python
-* Git & GitHub
-* Visual Studio Code
-* Google Gemini
-* Ollama
-* LangChain
-* LangGraph
-* CrewAI
+## Programming
+
+- Python
+
+## AI & LLMs
+
+- Google Gemini API
+- LangChain
+- Prompt Engineering
+- Large Language Models (LLMs)
+
+## Libraries
+
+- python-dotenv
+- PyPDF
+
+## Development Tools
+
+- Git
+- GitHub
+- Visual Studio Code
+
+## AI Frameworks
+
+- Ollama
+- LangGraph
+- CrewAI
 
 ---
 
-# 📈 Learning Goals
+# 📈 Skills Developed
 
-During this internship, I aim to:
+Throughout this internship, I am developing practical experience in:
 
-* Strengthen my Python programming skills.
-* Build a solid understanding of modern AI systems.
-* Develop applications using Generative AI and Agentic AI.
-* Gain practical experience with industry-standard AI frameworks.
-* Create real-world AI solutions through hands-on projects.
+- Python Programming
+- Prompt Engineering
+- Large Language Models
+- LangChain
+- API Integration
+- AI Application Development
+- File Processing
+- Git & GitHub
+- Technical Documentation
+- Software Development Best Practices
 
 ---
 
 # 🚀 Future Updates
 
-As the internship progresses, this repository will be expanded with:
+Upcoming topics and projects include:
 
-* LangChain Applications
-* RAG-Based Projects
-* AI Agent Workflows
-* LangGraph Implementations
-* CrewAI Projects
-* MCP Integrations
-* End-to-End AI Applications
-* Additional documentation and software projects
+- Retrieval-Augmented Generation (RAG)
+- Vector Database Integration
+- AI Agents
+- LangGraph Workflows
+- CrewAI Applications
+- MCP Integrations
+- Multi-Agent Systems
+- End-to-End AI Applications
+- Deployment of AI Projects
 
 ---
 
 # 📄 About
 
-This repository is maintained as part of my internship at **Cognitio Analytics**. It serves as a record of my learning, practical exercises, technical documentation, and project development while working with the **Software Team**.
+This repository is maintained as part of my internship at **Cognitio Analytics**. It serves as a record of my learning, technical documentation, hands-on exercises, and AI application development throughout the internship.
 
 ---
 
