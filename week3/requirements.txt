@@ -1,0 +1,67 @@
+# ----------------------------
+# Core LangChain
+# ----------------------------
+langchain
+langchain-community
+langchain-core
+
+# ----------------------------
+# Google Gemini
+# ----------------------------
+langchain-google-genai
+google-generativeai
+
+# ----------------------------
+# Vector Database
+# ----------------------------
+chromadb
+
+# ----------------------------
+# Embeddings
+# ----------------------------
+sentence-transformers
+
+# ----------------------------
+# Document Loaders
+# ----------------------------
+pypdf
+python-docx
+docx2txt
+unstructured
+markdown
+
+# ----------------------------
+# Text Splitters
+# ----------------------------
+langchain-text-splitters
+
+# ----------------------------
+# AI Agent
+# ----------------------------
+langgraph
+
+# ----------------------------
+# Frontend
+# ----------------------------
+streamlit
+
+# ----------------------------
+# Environment Variables
+# ----------------------------
+python-dotenv
+
+# ----------------------------
+# Logging & Utilities
+# ----------------------------
+tqdm
+
+# ----------------------------
+# Optional Evaluation
+# ----------------------------
+numpy
+pandas
+
+# ----------------------------
+# Type Validation
+# ----------------------------
+pydantic
