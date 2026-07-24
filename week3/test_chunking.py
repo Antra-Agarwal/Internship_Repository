@@ -1,5 +1,5 @@
 from src.loaders.pdf_loader import PDFLoader
-from src.processing.recursive_chunker import RecursiveChunker
+from src.processing.fixed_chunker import FixedChunker
 from src.processing.document_processor import DocumentProcessor
 
 
@@ -12,7 +12,7 @@ def main():
     )
 
     # Initialize processing pipeline
-    chunker = RecursiveChunker()
+    chunker = FixedChunker()
     processor = DocumentProcessor(chunker)
 
     # Process documents into chunks
