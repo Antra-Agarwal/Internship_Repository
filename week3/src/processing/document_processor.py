@@ -1,6 +1,6 @@
 from langchain_core.documents import Document
 
-from src.processing.chunking import DocumentChunker
+from src.processing.base_chunker import BaseChunker
 
 
 class DocumentProcessor:
@@ -13,12 +13,12 @@ class DocumentProcessor:
     - Return processed document chunks.
     """
 
-    def __init__(self, chunker: DocumentChunker):
+    def __init__(self, chunker: BaseChunker):
         """
         Initialize the document processor.
 
         Args:
-            chunker: Instance of DocumentChunker used to split documents.
+            chunker: Instance of BaseChunker used to split documents.
         """
         self._chunker = chunker
 

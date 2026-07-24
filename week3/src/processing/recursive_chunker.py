@@ -1,10 +1,10 @@
 from typing import List
-
+from src.processing.base_chunker import BaseChunker
 from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 
-class DocumentChunker:
+class RecursiveChunker(BaseChunker):
     def __init__(
         self,
         chunk_size: int = 1000,
