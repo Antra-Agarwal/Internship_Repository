@@ -15,6 +15,7 @@ google-generativeai
 # Vector Database
 # ----------------------------
 chromadb
+faiss-cpu
 
 # ----------------------------
 # Embeddings
