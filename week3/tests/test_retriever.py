@@ -1,5 +1,5 @@
 """
-Integration test for the FAISS vector store.
+Integration test for the Vector Store Retriever.
 """
 
 from pathlib import Path
@@ -8,11 +8,11 @@ from src.embeddings.google_embedding_model import GoogleEmbeddingModel
 from src.loaders import DocumentLoaderManager
 from src.processing.document_processor import DocumentProcessor
 from src.processing.recursive_chunker import RecursiveChunker
+from src.retrievers.vectorstore_retriever import VectorStoreRetriever
 from src.vectorstores import FAISSVectorStore
 
 
 DOCUMENTS_DIR = Path("data/documents")
-VECTOR_DB_PATH = "data/vector_db"
 
 QUERY = "What is a Database?"
 
@@ -64,6 +64,7 @@ def generate_embeddings(chunks):
 
     embedding_model = GoogleEmbeddingModel()
 
+    # Convert Document objects to plain text
     texts = [
         chunk.page_content
         for chunk in chunks
@@ -84,7 +85,7 @@ def build_vector_store(
     chunks,
 ):
     """
-    Build the vector store.
+    Build the FAISS vector store.
     """
 
     print("\nBuilding vector store...")
@@ -103,17 +104,18 @@ def build_vector_store(
 
 def display_results(results):
     """
-    Display search results.
+    Display retrieved results.
     """
 
-    print("\nTop Search Results")
+    print("\nTop Retrieved Results")
     print("=" * 60)
 
-    for i, result in enumerate(
+    for index, result in enumerate(
         results,
         start=1,
     ):
-        print(f"\nResult {i}")
+
+        print(f"\nResult {index}")
         print(f"Distance : {result.score:.4f}")
 
         preview = result.document.page_content[:300]
@@ -122,61 +124,23 @@ def display_results(results):
         print("-" * 60)
 
 
-def test_search(
-    vector_store,
+def test_retriever(
     embedding_model,
-):
-    """
-    Test similarity search.
-    """
-
-    print("\nTesting similarity search...")
-
-    query_embedding = embedding_model.embed_query(
-        QUERY
-    )
-
-    results = vector_store.search(
-        query_embedding,
-        k=3,
-    )
-
-    display_results(results)
-
-    return query_embedding
-
-
-def test_save_load(
     vector_store,
-    query_embedding,
 ):
     """
-    Test save/load functionality.
+    Test the retriever.
     """
 
-    print("\nSaving vector store...")
+    print("\nTesting Retriever...")
 
-    vector_store.save(
-        VECTOR_DB_PATH
+    retriever = VectorStoreRetriever(
+        embedding_model=embedding_model,
+        vector_store=vector_store,
     )
 
-    print("Vector store saved successfully.")
-
-    print("\nLoading vector store...")
-
-    loaded_store = FAISSVectorStore()
-
-    loaded_store.load(
-        VECTOR_DB_PATH
-    )
-
-    print("Vector store loaded successfully.")
-    print(f"Indexed Vectors : {len(loaded_store)}")
-
-    print("\nVerifying loaded vector store...")
-
-    results = loaded_store.search(
-        query_embedding,
+    results = retriever.retrieve(
+        query=QUERY,
         k=3,
     )
 
@@ -186,7 +150,7 @@ def test_save_load(
 def main():
 
     print("=" * 60)
-    print("FAISS VECTOR STORE INTEGRATION TEST")
+    print("VECTOR STORE RETRIEVER INTEGRATION TEST")
     print("=" * 60)
 
     documents = load_documents()
@@ -204,14 +168,9 @@ def main():
         chunks,
     )
 
-    query_embedding = test_search(
-        vector_store,
+    test_retriever(
         embedding_model,
-    )
-
-    test_save_load(
         vector_store,
-        query_embedding,
     )
 
     print("\n" + "=" * 60)
