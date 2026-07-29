@@ -9,7 +9,10 @@ import faiss
 import numpy as np
 from langchain_core.documents import Document
 
-from src.vectorstores.base import BaseVectorStore, SearchResult
+from src.vectorstores.base import (
+    BaseVectorStore,
+    SearchResult,
+)
 
 
 class FAISSVectorStore(BaseVectorStore):
@@ -48,6 +51,10 @@ class FAISSVectorStore(BaseVectorStore):
     ) -> None:
         """
         Add embeddings and documents to the vector store.
+
+        Args:
+            embeddings: List of embedding vectors.
+            documents: Corresponding LangChain documents.
         """
 
         if not embeddings:
@@ -60,11 +67,11 @@ class FAISSVectorStore(BaseVectorStore):
 
         embedding_dimension = len(embeddings[0])
 
-        # Initialize FAISS automatically on first insert
+        # Initialize the FAISS index on the first insertion.
         if self._index is None:
             self._initialize_index(embedding_dimension)
 
-        # Validate dimensions
+        # Validate embedding dimensions.
         for embedding in embeddings:
             if len(embedding) != self.dimension:
                 raise ValueError(
@@ -79,7 +86,6 @@ class FAISSVectorStore(BaseVectorStore):
         )
 
         self._index.add(vectors)
-
         self._documents.extend(documents)
 
     def search(
@@ -89,13 +95,23 @@ class FAISSVectorStore(BaseVectorStore):
     ) -> list[SearchResult]:
         """
         Search for the most similar documents.
+
+        Args:
+            query_embedding: Query embedding vector.
+            k: Number of nearest neighbours to retrieve.
+
+        Returns:
+            List of SearchResult objects sorted by increasing L2 distance.
+            A smaller score indicates a more similar document.
         """
 
         if self._index is None:
             return []
 
         if k <= 0:
-            raise ValueError("k must be greater than zero.")
+            raise ValueError(
+                "k must be greater than zero."
+            )
 
         if len(query_embedding) != self.dimension:
             raise ValueError(
@@ -103,6 +119,9 @@ class FAISSVectorStore(BaseVectorStore):
                 f"{self.dimension}, "
                 f"received {len(query_embedding)}."
             )
+
+        # Do not request more neighbours than exist.
+        k = min(k, len(self._documents))
 
         query_vector = np.asarray(
             [query_embedding],
@@ -138,6 +157,9 @@ class FAISSVectorStore(BaseVectorStore):
     ) -> None:
         """
         Save the vector store.
+
+        Args:
+            path: Directory where the vector store will be saved.
         """
 
         if self._index is None:
@@ -170,7 +192,10 @@ class FAISSVectorStore(BaseVectorStore):
         path: str,
     ) -> None:
         """
-        Load a saved vector store.
+        Load a previously saved vector store.
+
+        Args:
+            path: Directory containing the FAISS index and documents.
         """
 
         load_dir = Path(path)
@@ -202,7 +227,7 @@ class FAISSVectorStore(BaseVectorStore):
 
     def __len__(self) -> int:
         """
-        Number of indexed vectors.
+        Return the number of indexed vectors.
         """
 
         if self._index is None:
