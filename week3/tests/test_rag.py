@@ -16,10 +16,11 @@ from src.vectorstores import FAISSVectorStore
 
 DOCUMENTS_DIR = Path("data/documents")
 
-QUESTION = "What is a Database?"
-
 
 def load_documents():
+    """
+    Load all supported documents from the documents directory.
+    """
 
     print("\nLoading documents...")
 
@@ -35,6 +36,9 @@ def load_documents():
 
 
 def process_documents(documents):
+    """
+    Chunk the loaded documents.
+    """
 
     print("\nProcessing documents...")
 
@@ -52,6 +56,9 @@ def process_documents(documents):
 
 
 def generate_embeddings(chunks):
+    """
+    Generate embeddings for all document chunks.
+    """
 
     print("\nGenerating embeddings...")
 
@@ -75,6 +82,9 @@ def build_vector_store(
     embeddings,
     chunks,
 ):
+    """
+    Build an in-memory FAISS vector store.
+    """
 
     print("\nBuilding vector store...")
 
@@ -94,6 +104,9 @@ def test_rag(
     embedding_model,
     vector_store,
 ):
+    """
+    Test the complete RAG pipeline.
+    """
 
     print("\nInitializing Retriever...")
 
@@ -113,18 +126,32 @@ def test_rag(
         llm=llm,
     )
 
-    print("\nQuestion")
-    print("=" * 60)
-    print(QUESTION)
+    while True:
 
-    answer = rag.answer(
-        QUESTION,
-        k=3,
-    )
+        question = input(
+            "\nEnter a question for the RAG pipeline (or 'exit'): "
+        ).strip()
 
-    print("\nAnswer")
-    print("=" * 60)
-    print(answer)
+        if question.lower() == "exit":
+            print("\nExiting RAG test.")
+            return
+
+        if not question:
+            print("Question cannot be empty.")
+            continue
+
+        print("\nQuestion")
+        print("=" * 60)
+        print(question)
+
+        answer = rag.answer(
+            question,
+            k=3,
+        )
+
+        print("\nAnswer")
+        print("=" * 60)
+        print(answer)
 
 
 def main():
