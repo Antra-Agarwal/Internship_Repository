@@ -2,101 +2,32 @@
 Integration test for the FAISS vector store.
 """
 
-from pathlib import Path
+from dotenv import load_dotenv
 
 from src.embeddings.google_embedding_model import GoogleEmbeddingModel
-from src.loaders import DocumentLoaderManager
-from src.processing.document_processor import DocumentProcessor
-from src.processing.recursive_chunker import RecursiveChunker
 from src.vectorstores import FAISSVectorStore
 
 
-DOCUMENTS_DIR = Path("data/documents")
 VECTOR_DB_PATH = "data/vector_db"
 
 QUERY = "What is a Database?"
 
 
-def load_documents():
+def load_vector_store():
     """
-    Load all supported documents.
-    """
-
-    print("\nLoading documents...")
-
-    manager = DocumentLoaderManager()
-
-    documents = manager.load_directory(
-        str(DOCUMENTS_DIR)
-    )
-
-    print(f"Loaded {len(documents)} document(s).")
-
-    return documents
-
-
-def process_documents(documents):
-    """
-    Split documents into chunks.
+    Load an existing vector database.
     """
 
-    print("\nProcessing documents...")
-
-    processor = DocumentProcessor(
-        RecursiveChunker()
-    )
-
-    chunks = processor.process_documents(
-        documents
-    )
-
-    print(f"Generated {len(chunks)} chunk(s).")
-
-    return chunks
-
-
-def generate_embeddings(chunks):
-    """
-    Generate embeddings for document chunks.
-    """
-
-    print("\nGenerating embeddings...")
-
-    embedding_model = GoogleEmbeddingModel()
-
-    texts = [
-        chunk.page_content
-        for chunk in chunks
-    ]
-
-    embeddings = embedding_model.embed_documents(
-        texts
-    )
-
-    print(f"Generated {len(embeddings)} embeddings.")
-    print(f"Embedding Dimension : {len(embeddings[0])}")
-
-    return embedding_model, embeddings
-
-
-def build_vector_store(
-    embeddings,
-    chunks,
-):
-    """
-    Build the vector store.
-    """
-
-    print("\nBuilding vector store...")
+    print("\nLoading vector database...")
 
     vector_store = FAISSVectorStore()
 
-    vector_store.add(
-        embeddings,
-        chunks,
+    vector_store.load(
+        VECTOR_DB_PATH
     )
 
-    print(f"Indexed Vectors : {len(vector_store)}")
+    print("Vector database loaded successfully.")
+    print(f"Indexed vectors : {len(vector_store)}")
 
     return vector_store
 
@@ -116,13 +47,22 @@ def display_results(results):
         print(f"\nResult {i}")
         print(f"Distance : {result.score:.4f}")
 
-        preview = result.document.page_content[:300]
+        metadata = result.document.metadata
+
+        print(f"Source   : {metadata.get('source')}")
+        print(f"Page     : {metadata.get('page')}")
+
+        preview = (
+            result.document.page_content[:300]
+            .replace("\n", " ")
+            .strip()
+        )
 
         print(preview)
         print("-" * 60)
 
 
-def test_search(
+def test_similarity_search(
     vector_store,
     embedding_model,
 ):
@@ -143,26 +83,18 @@ def test_search(
 
     display_results(results)
 
-    return query_embedding
+    return query_embedding, results
 
 
-def test_save_load(
-    vector_store,
+def test_reload(
     query_embedding,
 ):
     """
-    Test save/load functionality.
+    Verify that the saved vector database
+    can be loaded correctly.
     """
 
-    print("\nSaving vector store...")
-
-    vector_store.save(
-        VECTOR_DB_PATH
-    )
-
-    print("Vector store saved successfully.")
-
-    print("\nLoading vector store...")
+    print("\nReloading vector database...")
 
     loaded_store = FAISSVectorStore()
 
@@ -170,10 +102,10 @@ def test_save_load(
         VECTOR_DB_PATH
     )
 
-    print("Vector store loaded successfully.")
-    print(f"Indexed Vectors : {len(loaded_store)}")
+    print("Vector database loaded successfully.")
+    print(f"Indexed vectors : {len(loaded_store)}")
 
-    print("\nVerifying loaded vector store...")
+    print("\nVerifying loaded vector database...")
 
     results = loaded_store.search(
         query_embedding,
@@ -185,32 +117,22 @@ def test_save_load(
 
 def main():
 
+    load_dotenv()
+
     print("=" * 60)
     print("FAISS VECTOR STORE INTEGRATION TEST")
     print("=" * 60)
 
-    documents = load_documents()
+    embedding_model = GoogleEmbeddingModel()
 
-    chunks = process_documents(
-        documents
-    )
+    vector_store = load_vector_store()
 
-    embedding_model, embeddings = generate_embeddings(
-        chunks
-    )
-
-    vector_store = build_vector_store(
-        embeddings,
-        chunks,
-    )
-
-    query_embedding = test_search(
+    query_embedding, _ = test_similarity_search(
         vector_store,
         embedding_model,
     )
 
-    test_save_load(
-        vector_store,
+    test_reload(
         query_embedding,
     )
 

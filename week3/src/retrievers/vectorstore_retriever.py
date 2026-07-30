@@ -16,7 +16,7 @@ class VectorStoreRetriever(BaseRetriever):
 
     The retriever converts a user query into an embedding,
     searches the vector store, and optionally filters
-    results based on a maximum distance threshold.
+    results using similarity thresholds and metadata.
     """
 
     def __init__(
@@ -39,6 +39,7 @@ class VectorStoreRetriever(BaseRetriever):
         query: str,
         k: int = 5,
         max_distance: float | None = None,
+        metadata_filter: dict[str, object] | None = None,
     ) -> list[SearchResult]:
         """
         Retrieve the top-k most relevant documents.
@@ -47,8 +48,11 @@ class VectorStoreRetriever(BaseRetriever):
             query: User query.
             k: Number of documents to retrieve.
             max_distance: Maximum allowed L2 distance.
-                Results having a larger distance are discarded.
+                Results with a larger distance are discarded.
                 If None, no threshold is applied.
+            metadata_filter: Metadata values that retrieved
+                documents must match.
+                If None, no metadata filtering is applied.
 
         Returns:
             List of SearchResult objects.
@@ -79,11 +83,23 @@ class VectorStoreRetriever(BaseRetriever):
             k=k,
         )
 
-        if max_distance is None:
-            return results
+        # Apply similarity threshold
+        if max_distance is not None:
+            results = [
+                result
+                for result in results
+                if result.score <= max_distance
+            ]
 
-        return [
-            result
-            for result in results
-            if result.score <= max_distance
-        ]
+        # Apply metadata filtering
+        if metadata_filter is not None:
+            results = [
+                result
+                for result in results
+                if all(
+                    result.document.metadata.get(key) == value
+                    for key, value in metadata_filter.items()
+                )
+            ]
+
+        return results
