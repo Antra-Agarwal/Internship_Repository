@@ -18,10 +18,11 @@ class BaseRetriever(ABC):
 
     @abstractmethod
     def retrieve(
-        self,
-        query: str,
-        k: int = 5,
-    ) -> list[SearchResult]:
+    self,
+    query: str,
+    k: int = 5,
+    **kwargs,
+) -> list[SearchResult]:
         """
         Retrieve the most relevant documents.
 

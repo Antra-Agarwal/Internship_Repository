@@ -225,6 +225,13 @@ class FAISSVectorStore(BaseVectorStore):
         ) as file:
             self._documents = pickle.load(file)
 
+    @property
+    def documents(self) -> list[Document]:
+        """
+        Return indexed documents.
+        """
+        return self._documents
+
     def __len__(self) -> int:
         """
         Return the number of indexed vectors.
