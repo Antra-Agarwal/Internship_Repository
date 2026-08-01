@@ -57,3 +57,4 @@ pandas
 pydantic
 
 rank-bm25
+sentence-transformers

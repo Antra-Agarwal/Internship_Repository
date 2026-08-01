@@ -2,111 +2,36 @@
 Integration test for the complete RAG pipeline.
 """
 
-from pathlib import Path
+from dotenv import load_dotenv
 
 from src.embeddings.google_embedding_model import GoogleEmbeddingModel
 from src.llms import GoogleLLM
-from src.loaders import DocumentLoaderManager
-from src.processing.document_processor import DocumentProcessor
-from src.processing.recursive_chunker import RecursiveChunker
 from src.rag import RAGPipeline
+from src.rerankers import CrossEncoderReranker
 from src.retrievers import VectorStoreRetriever
 from src.vectorstores import FAISSVectorStore
 
 
-DOCUMENTS_DIR = Path("data/documents")
+VECTOR_DB_PATH = "data/vector_db"
 
 
-def load_documents():
-    """
-    Load all supported documents from the documents directory.
-    """
+def test_rag():
 
-    print("\nLoading documents...")
+    load_dotenv()
 
-    manager = DocumentLoaderManager()
-
-    documents = manager.load_directory(
-        str(DOCUMENTS_DIR)
-    )
-
-    print(f"Loaded {len(documents)} document(s).")
-
-    return documents
-
-
-def process_documents(documents):
-    """
-    Chunk the loaded documents.
-    """
-
-    print("\nProcessing documents...")
-
-    processor = DocumentProcessor(
-        RecursiveChunker()
-    )
-
-    chunks = processor.process_documents(
-        documents
-    )
-
-    print(f"Generated {len(chunks)} chunk(s).")
-
-    return chunks
-
-
-def generate_embeddings(chunks):
-    """
-    Generate embeddings for all document chunks.
-    """
-
-    print("\nGenerating embeddings...")
+    print("\nLoading embedding model...")
 
     embedding_model = GoogleEmbeddingModel()
 
-    texts = [
-        chunk.page_content
-        for chunk in chunks
-    ]
-
-    embeddings = embedding_model.embed_documents(
-        texts
-    )
-
-    print(f"Generated {len(embeddings)} embeddings.")
-
-    return embedding_model, embeddings
-
-
-def build_vector_store(
-    embeddings,
-    chunks,
-):
-    """
-    Build an in-memory FAISS vector store.
-    """
-
-    print("\nBuilding vector store...")
+    print("Loading vector store...")
 
     vector_store = FAISSVectorStore()
 
-    vector_store.add(
-        embeddings,
-        chunks,
+    vector_store.load(
+        VECTOR_DB_PATH
     )
 
     print(f"Indexed Vectors : {len(vector_store)}")
-
-    return vector_store
-
-
-def test_rag(
-    embedding_model,
-    vector_store,
-):
-    """
-    Test the complete RAG pipeline.
-    """
 
     print("\nInitializing Retriever...")
 
@@ -114,6 +39,10 @@ def test_rag(
         embedding_model=embedding_model,
         vector_store=vector_store,
     )
+
+    print("Initializing Cross-Encoder Reranker...")
+
+    reranker = CrossEncoderReranker()
 
     print("Initializing LLM...")
 
@@ -123,21 +52,20 @@ def test_rag(
 
     rag = RAGPipeline(
         retriever=retriever,
+        reranker=reranker,
         llm=llm,
     )
 
     while True:
 
         question = input(
-            "\nEnter a question for the RAG pipeline (or 'exit'): "
+            "\nEnter a question (or 'exit'): "
         ).strip()
 
         if question.lower() == "exit":
-            print("\nExiting RAG test.")
-            return
+            break
 
         if not question:
-            print("Question cannot be empty.")
             continue
 
         print("\nQuestion")
@@ -145,7 +73,8 @@ def test_rag(
         print(question)
 
         answer = rag.answer(
-            question,
+            question=question,
+            retrieval_k=10,
             k=3,
         )
 
@@ -160,25 +89,7 @@ def main():
     print("RAG PIPELINE INTEGRATION TEST")
     print("=" * 60)
 
-    documents = load_documents()
-
-    chunks = process_documents(
-        documents
-    )
-
-    embedding_model, embeddings = generate_embeddings(
-        chunks
-    )
-
-    vector_store = build_vector_store(
-        embeddings,
-        chunks,
-    )
-
-    test_rag(
-        embedding_model,
-        vector_store,
-    )
+    test_rag()
 
     print("\n" + "=" * 60)
     print("ALL TESTS PASSED SUCCESSFULLY")
