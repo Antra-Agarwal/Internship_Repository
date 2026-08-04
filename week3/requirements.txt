@@ -58,3 +58,6 @@ pydantic
 
 rank-bm25
 sentence-transformers
+langgraph
+langchain-core
+typing_extensions
