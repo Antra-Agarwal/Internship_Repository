@@ -13,6 +13,7 @@ from dotenv import load_dotenv
 from src.agents import RAGAgent
 from src.embeddings.google_embedding_model import GoogleEmbeddingModel
 from src.llms import GoogleLLM
+from src.memory import ConversationMemory
 from src.rerankers import CrossEncoderReranker
 from src.retrievers import VectorStoreRetriever
 from src.retrievers.bm25_retriever import BM25Retriever
@@ -105,6 +106,11 @@ def main():
 
     tool_executor = initialize_tools()
 
+    # Initialize conversation memory
+    memory = ConversationMemory(
+        max_turns=5,
+    )
+
     print("\nReady!\n")
 
     while True:
@@ -117,18 +123,32 @@ def main():
         if not question:
             continue
 
+        # Store user message
+        memory.add_user_message(question)
+
         tool_result = tool_executor.execute(question)
 
         if tool_result is not None:
 
             print("\nAssistant:")
             print(tool_result)
+
+            # Store assistant response
+            memory.add_assistant_message(
+                tool_result
+            )
+
             continue
 
         response = agent.invoke(question)
 
         print("\nAssistant:")
         print(response["answer"])
+
+        # Store assistant response
+        memory.add_assistant_message(
+            response["answer"]
+        )
 
 
 if __name__ == "__main__":
