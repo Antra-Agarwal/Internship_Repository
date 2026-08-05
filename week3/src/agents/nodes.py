@@ -12,7 +12,14 @@ from .state import AgentState
 
 class RetrievalNode:
     """
-    Retrieves relevant documents and prepares context.
+    LangGraph node responsible for document retrieval.
+
+    Responsibilities:
+    1. Retrieve relevant documents.
+    2. Apply reranking (optional).
+    3. Validate retrieval quality.
+    4. Build the context string.
+    5. Store retrieval information in the graph state.
     """
 
     def __init__(
@@ -21,16 +28,21 @@ class RetrievalNode:
         reranker: BaseReranker | None = None,
         retrieval_k: int = 10,
         final_k: int = 3,
+        rerank_threshold: float = 0.0,
     ):
         self._retriever = retriever
         self._reranker = reranker
         self._retrieval_k = retrieval_k
         self._final_k = final_k
+        self._rerank_threshold = rerank_threshold
 
     def __call__(
         self,
         state: AgentState,
     ) -> AgentState:
+        """
+        Execute the retrieval step.
+        """
 
         results = self._retriever.retrieve(
             query=state["question"],
@@ -38,38 +50,58 @@ class RetrievalNode:
         )
 
         if self._reranker is not None:
+
             results = self._reranker.rerank(
                 query=state["question"],
                 results=results,
                 top_k=self._final_k,
             )
+
+            # Validate reranked results
+            if (
+                not results
+                or results[0].score < self._rerank_threshold
+            ):
+                results = []
+
         else:
+
             results = results[: self._final_k]
 
-        context = "\n\n".join(
-            result.document.page_content
-            for result in results
-        )
+        if results:
+
+            context = "\n\n".join(
+                result.document.page_content
+                for result in results
+            )
+
+        else:
+
+            context = ""
 
         state["results"] = results
         state["context"] = context
 
-        state["metadata"] = {
-            "retrieved_documents": len(results),
-            "retriever": type(self._retriever).__name__,
-            "reranker": (
-                type(self._reranker).__name__
-                if self._reranker
-                else None
-            ),
-        }
+        state["metadata"].update(
+            {
+                "route": "retrieve",
+                "retrieval_success": len(results) > 0,
+                "retrieved_documents": len(results),
+                "retriever": type(self._retriever).__name__,
+                "reranker": (
+                    type(self._reranker).__name__
+                    if self._reranker is not None
+                    else None
+                ),
+            }
+        )
 
         return state
 
 
 class GenerationNode:
     """
-    Generates the final answer.
+    LangGraph node responsible for answer generation.
     """
 
     def __init__(
@@ -79,18 +111,48 @@ class GenerationNode:
         self._llm = llm
 
     def __call__(
-            self,
-            state: AgentState,
-        ) -> AgentState:
+        self,
+        state: AgentState,
+    ) -> AgentState:
+        """
+        Generate the final answer.
+        """
 
         if state["context"]:
+
             prompt = RAG_PROMPT.format(
                 context=state["context"],
                 question=state["question"],
             )
 
         else:
-            prompt = state["question"]
 
-        state["answer"] = self._llm.generate(prompt)
+            route = state["metadata"].get("route")
+
+            if route == "generate":
+
+                # Router intentionally skipped retrieval
+                prompt = state["question"]
+
+            else:
+
+                # Retrieval failed to find relevant context
+                prompt = """
+No relevant documents were found in the knowledge base.
+
+Respond exactly with:
+
+"I don't know based on the provided documents."
+"""
+
+        answer = self._llm.generate(prompt)
+
+        state["answer"] = answer
+
+        state["metadata"].update(
+            {
+                "generator": type(self._llm).__name__,
+            }
+        )
+
         return state

@@ -40,22 +40,32 @@ def test_langgraph():
         vector_store=vector_store,
     )
 
-    print("Initializing Cross-Encoder Reranker...")
+    print("\nInitializing Cross-Encoder Reranker...")
 
     reranker = CrossEncoderReranker()
 
-    print("Initializing LLM...")
+    print("\nInitializing Router LLM...")
 
-    llm = GoogleLLM()
+    router_llm = GoogleLLM(
+        temperature=0.0,
+    )
 
-    print("Initializing LangGraph Agent...")
+    print("Initializing Generator LLM...")
+
+    generator_llm = GoogleLLM(
+        temperature=0.2,
+    )
+
+    print("\nInitializing LangGraph Agent...")
 
     agent = RAGAgent(
         retriever=retriever,
-        llm=llm,
+        router_llm=router_llm,
+        generator_llm=generator_llm,
         reranker=reranker,
         retrieval_k=10,
         final_k=3,
+        rerank_threshold=0.0,
     )
 
     while True:
@@ -83,27 +93,34 @@ def test_langgraph():
         print("\nRetrieved Documents")
         print("=" * 60)
 
-        for index, result in enumerate(
-            response["results"],
-            start=1,
-        ):
-            print(f"\nDocument {index}")
-            print(f"Score : {result.score:.4f}")
+        if response["results"]:
 
-            source = result.document.metadata.get(
-                "source",
-                "Unknown",
-            )
+            for index, result in enumerate(
+                response["results"],
+                start=1,
+            ):
 
-            print(f"Source : {source}")
+                print(f"\nDocument {index}")
+                print(f"Score : {result.score:.4f}")
 
-            preview = (
-                result.document.page_content[:200]
-                .replace("\n", " ")
-                .strip()
-            )
+                source = result.document.metadata.get(
+                    "source",
+                    "Unknown",
+                )
 
-            print(f"Preview : {preview}...")
+                print(f"Source : {source}")
+
+                preview = (
+                    result.document.page_content[:200]
+                    .replace("\n", " ")
+                    .strip()
+                )
+
+                print(f"Preview : {preview}...")
+
+        else:
+
+            print("No relevant documents retrieved.")
 
         print("\nMetadata")
         print("=" * 60)
