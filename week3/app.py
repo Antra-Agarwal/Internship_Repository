@@ -9,6 +9,7 @@ Features:
 """
 
 from dotenv import load_dotenv
+from src.utils.logger import get_logger
 
 from src.agents import RAGAgent
 from src.embeddings.google_embedding_model import GoogleEmbeddingModel
@@ -93,16 +94,18 @@ def initialize_tools() -> ToolExecutor:
 def main():
 
     load_dotenv()
+    logger = get_logger("App")
+
 
     print("=" * 60)
     print("RAG AI ASSISTANT")
     print("=" * 60)
 
-    print("\nLoading agent...")
+    logger.info("Loading RAG agent...")
 
     agent = initialize_agent()
 
-    print("Loading tools...")
+    logger.info("Loading tools...")
 
     tool_executor = initialize_tools()
 
@@ -111,11 +114,15 @@ def main():
         max_turns=5,
     )
 
-    print("\nReady!\n")
+    logger.info("Application ready.")
+    print()
 
     while True:
 
         question = input("You : ").strip()
+        logger.info(
+            f"User Question: {question}"
+        )
 
         if question.lower() == "exit":
             break
@@ -132,6 +139,9 @@ def main():
 
             print("\nAssistant:")
             print(tool_result)
+            logger.info(
+                "Response generated using ToolExecutor."
+            )
 
             # Store assistant response
             memory.add_assistant_message(
@@ -141,6 +151,9 @@ def main():
             continue
 
         response = agent.invoke(question)
+        logger.info(
+            "Response generated using RAG agent."
+        )
 
         print("\nAssistant:")
         print(response["answer"])

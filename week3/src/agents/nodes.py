@@ -6,6 +6,7 @@ from src.llms import BaseLLM
 from src.prompts.rag_prompt import RAG_PROMPT
 from src.rerankers import BaseReranker
 from src.retrievers import BaseRetriever
+from src.utils.logger import get_logger
 
 from .state import AgentState
 
@@ -35,6 +36,9 @@ class RetrievalNode:
         self._retrieval_k = retrieval_k
         self._final_k = final_k
         self._rerank_threshold = rerank_threshold
+        self._logger = get_logger(
+            self.__class__.__name__
+        )
 
     def __call__(
         self,
@@ -49,6 +53,10 @@ class RetrievalNode:
             k=self._retrieval_k,
         )
 
+        self._logger.info(
+            f"Retrieved {len(results)} documents."
+        )
+
         if self._reranker is not None:
 
             results = self._reranker.rerank(
@@ -56,6 +64,9 @@ class RetrievalNode:
                 results=results,
                 top_k=self._final_k,
             )
+            self._logger.info(
+                f"Reranked to {len(results)} documents."
+            )   
 
             # Validate reranked results
             if (
@@ -109,6 +120,9 @@ class GenerationNode:
         llm: BaseLLM,
     ):
         self._llm = llm
+        self._logger = get_logger(
+            self.__class__.__name__
+        )
 
     def __call__(
         self,
@@ -155,4 +169,7 @@ Respond exactly with:
             }
         )
 
+        self._logger.info(
+            "Response generated successfully."
+        )
         return state

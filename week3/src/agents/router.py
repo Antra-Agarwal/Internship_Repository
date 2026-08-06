@@ -4,6 +4,7 @@ LLM-powered router for the LangGraph agent.
 
 from src.llms import BaseLLM
 from src.prompts.router_prompt import ROUTER_PROMPT
+from src.utils.logger import get_logger
 
 from .state import AgentState
 
@@ -38,6 +39,9 @@ class RouterNode:
         """
 
         self._llm = llm
+        self._logger = get_logger(
+            self.__class__.__name__
+        )
 
     def __call__(
             self,
@@ -73,4 +77,7 @@ class RouterNode:
             decision = "retrieve"
 
         state["metadata"]["route"] = decision
+        self._logger.info(
+            f"Route selected: {decision}"
+        )
         return decision
