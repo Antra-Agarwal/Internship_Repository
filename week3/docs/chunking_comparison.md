@@ -152,3 +152,210 @@ For this project, **Recursive Chunking** is selected as the default chunking str
 # Conclusion
 
 This comparison demonstrates that there is no universally best chunking strategy. The appropriate choice depends on the application's requirements, available computational resources, and desired retrieval quality. Implementing and evaluating multiple chunking approaches provides flexibility for future optimization of the RAG pipeline.
+# Chunking Strategy Comparison
+
+## Overview
+
+Large Language Models cannot process entire documents efficiently because of context window limitations.
+
+To enable efficient retrieval, documents are divided into smaller pieces called **chunks** before generating embeddings and storing them in the vector database.
+
+This project implements and evaluates three chunking strategies:
+
+- Fixed-size Chunking
+- Recursive Chunking
+- Semantic Chunking
+
+The goal is to understand the advantages and limitations of each approach and select the most suitable strategy for the Retrieval-Augmented Generation (RAG) pipeline.
+
+---
+
+# Why Chunking?
+
+Instead of embedding an entire document, the document is divided into manageable sections.
+
+Benefits include:
+
+- Improved retrieval accuracy
+- Better embedding quality
+- Reduced context size
+- Faster similarity search
+- More relevant responses
+
+---
+
+# Chunking Pipeline
+
+```
+Document
+    │
+    ▼
+Document Loader
+    │
+    ▼
+Chunking Strategy
+    │
+    ▼
+Document Chunks
+    │
+    ▼
+Embedding Generation
+    │
+    ▼
+FAISS Vector Store
+```
+
+---
+
+# 1. Fixed-Size Chunking
+
+## Description
+
+Fixed-size chunking divides documents into chunks containing a predefined number of characters.
+
+Example:
+
+```
+Chunk Size = 500
+
+Chunk 1
+Characters 1–500
+
+Chunk 2
+Characters 501–1000
+
+Chunk 3
+Characters 1001–1500
+```
+
+---
+
+## Advantages
+
+- Simple implementation
+- Fast execution
+- Consistent chunk sizes
+- Low computational cost
+
+---
+
+## Limitations
+
+- May split sentences
+- Can break paragraphs
+- Ignores document structure
+- Reduced semantic coherence
+
+---
+
+# 2. Recursive Chunking
+
+## Description
+
+Recursive chunking attempts to preserve document structure.
+
+Instead of cutting strictly by character count, it recursively splits using separators such as:
+
+- Paragraphs
+- Blank lines
+- Sentences
+- Spaces
+
+Only when necessary does it split by character length.
+
+---
+
+## Advantages
+
+- Preserves semantic meaning
+- Maintains paragraph boundaries
+- Better retrieval quality
+- More coherent context
+
+---
+
+## Limitations
+
+- Slightly slower than fixed-size chunking
+- Chunk sizes are less uniform
+
+---
+
+# 3. Semantic Chunking
+
+## Description
+
+Semantic chunking groups text based on meaning rather than character count.
+
+Adjacent text segments are compared using embedding similarity.
+
+Chunks are created when the semantic similarity between consecutive segments decreases significantly.
+
+---
+
+## Advantages
+
+- High semantic coherence
+- Natural topic boundaries
+- Excellent retrieval quality
+
+---
+
+## Limitations
+
+- Computationally expensive
+- Requires additional embedding generation
+- Slower indexing process
+
+---
+
+# Comparison
+
+| Feature | Fixed | Recursive | Semantic |
+|---------|:-----:|:---------:|:--------:|
+| Speed | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐ |
+| Simplicity | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐ |
+| Context Preservation | ⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ |
+| Semantic Quality | ⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ |
+| Retrieval Accuracy | ⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ |
+| Computational Cost | Low | Medium | High |
+
+---
+
+# Selected Strategy
+
+The production RAG pipeline uses **Recursive Chunking**.
+
+Reasons:
+
+- Preserves document structure
+- Produces coherent chunks
+- Balances retrieval quality and indexing speed
+- Well suited for technical documentation
+- Lower computational overhead than semantic chunking
+
+Semantic chunking was implemented and evaluated for comparison but was not selected as the default due to its higher computational cost.
+
+---
+
+# Future Improvements
+
+Possible enhancements include:
+
+- Adaptive chunk sizes
+- Hybrid chunking strategies
+- Dynamic overlap selection
+- Topic-aware chunking
+- LLM-assisted chunking
+
+---
+
+# Summary
+
+Three chunking strategies were implemented and evaluated.
+
+- **Fixed-size chunking** provides simplicity and speed.
+- **Recursive chunking** offers the best balance between efficiency and retrieval quality.
+- **Semantic chunking** produces highly coherent chunks but incurs additional computational cost.
+
+Based on these observations, **Recursive Chunking** was selected as the default strategy for the production RAG pipeline.
