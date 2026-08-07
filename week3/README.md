@@ -1,8 +1,35 @@
+
 # Production-Grade Retrieval-Augmented Generation (RAG) AI Agent
 
-> A modular, production-quality Retrieval-Augmented Generation (RAG) system built using **LangGraph**, **LangChain**, **Google Gemini**, **FAISS**, **BM25**, and **Cross-Encoder Reranking**.
+> A production-quality **Retrieval-Augmented Generation (RAG)** system built using **LangGraph**, **LangChain**, **Google Gemini**, **FAISS**, **BM25**, and **Cross-Encoder Re-ranking**.
 
-This project was developed as part of the **Week 3 Internship Assignment** at **Cognitio Analytics** to demonstrate the design and implementation of a complete RAG pipeline, hybrid retrieval, AI agent workflows, tool integration, evaluation, and production engineering practices.
+This project was developed as part of the **Week 3 Internship Assignment** at **Cognitio Analytics**. It demonstrates the implementation of a complete Retrieval-Augmented Generation pipeline, hybrid retrieval, AI agent orchestration, tool integration, evaluation, structured logging, and production engineering practices.
+
+---
+
+## Table of Contents
+
+- [Features](#features)
+- [System Architecture](#system-architecture)
+- [Technology Stack](#technology-stack)
+- [Project Structure](#project-structure)
+- [Installation](#installation)
+- [Docker Deployment](#docker-deployment)
+- [Running the Application](#running-the-application)
+- [Example Queries](#example-queries)
+- [Retrieval Pipeline](#retrieval-pipeline)
+- [AI Agent Workflow](#ai-agent-workflow)
+- [Running Tests](#running-tests)
+- [Evaluation](#evaluation)
+- [Documentation](#documentation)
+- [Engineering Practices](#engineering-practices)
+- [Learning Outcomes](#learning-outcomes)
+- [Repository Highlights](#repository-highlights)
+- [Future Improvements](#future-improvements)
+- [Acknowledgements](#acknowledgements)
+- [License](#license)
+- [Author](#author)
+- [Project Status](#project-status)
 
 ---
 
@@ -17,7 +44,7 @@ This project was developed as part of the **Week 3 Internship Assignment** at **
 - Fixed-size Chunking
 - Recursive Chunking
 - Semantic Chunking
-- Document Processing Pipeline
+- Automated Document Processing Pipeline
 
 ---
 
@@ -27,18 +54,18 @@ This project was developed as part of the **Week 3 Internship Assignment** at **
 - FAISS Vector Database
 - Dense Semantic Search
 - Metadata Filtering
-- Vector Store Persistence
+- Persistent Vector Storage
 
 ---
 
 ## Retrieval Optimization
 
-- Dense Retrieval
+- Dense Vector Retrieval
 - BM25 Sparse Retrieval
-- Hybrid Retrieval (Reciprocal Rank Fusion)
+- Hybrid Retrieval using Reciprocal Rank Fusion (RRF)
 - Cross-Encoder Re-ranking
 - Top-K Retrieval
-- Similarity Thresholding
+- Similarity Score Thresholding
 
 ---
 
@@ -49,14 +76,14 @@ Built using **LangGraph** with:
 - Router Node
 - Retrieval Node
 - Generation Node
+- Shared State Management
 - Conditional Routing
-- State Management
 
 ---
 
 ## Tool Calling
 
-Integrated tools:
+Integrated tools include:
 
 - Calculator Tool
 - File Reader Tool
@@ -78,7 +105,9 @@ Integrated tools:
 - Type Hints
 - Structured Logging
 - Error Handling
-- Evaluation Framework
+- Automated Evaluation
+- Dockerized Deployment
+- Comprehensive Technical Documentation
 - Automated Test Suite
 
 ---
@@ -103,7 +132,7 @@ Calculator Tool   File Reader Tool         ▼
                                ▼                   ▼
                             FAISS               BM25
                                │
-                        Cross-Encoder
+                    Cross-Encoder Re-ranker
                                │
                          Google Gemini
                                │
@@ -115,28 +144,31 @@ Calculator Tool   File Reader Tool         ▼
 
 # Technology Stack
 
-| Category | Technologies |
-|-----------|--------------|
-| Programming Language | Python |
+| Category | Technology |
+|-----------|------------|
+| Programming Language | Python 3.13 |
 | LLM | Google Gemini |
 | AI Framework | LangChain |
 | Agent Framework | LangGraph |
 | Embeddings | Gemini Embeddings |
 | Vector Database | FAISS |
 | Sparse Retrieval | BM25 |
-| Hybrid Search | Reciprocal Rank Fusion |
-| Re-ranking | Sentence Transformers Cross Encoder |
+| Hybrid Retrieval | Reciprocal Rank Fusion |
+| Re-ranking | Sentence Transformers Cross-Encoder |
 | Document Parsing | PyPDF, python-docx |
-| Environment | python-dotenv |
+| Environment Management | python-dotenv |
+| Containerization | Docker & Docker Compose |
 
 ---
 
 # Project Structure
 
-```
+```text
 week3/
 │
 ├── app.py
+├── Dockerfile
+├── docker-compose.yml
 ├── requirements.txt
 ├── README.md
 │
@@ -174,78 +206,95 @@ week3/
 
 # Installation
 
-## Clone the repository
+## 1. Clone the Repository
 
 ```bash
 git clone <repository-url>
 cd week3
 ```
 
-## Create a virtual environment
+---
 
-```bash
-python -m venv venv
-```
+## 2. Create a Virtual Environment
 
 ### Windows
 
 ```bash
+python -m venv venv
 venv\Scripts\activate
 ```
 
 ### Linux / macOS
 
 ```bash
+python3 -m venv venv
 source venv/bin/activate
 ```
 
-## Install dependencies
+---
+
+## 3. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## Configure Environment Variables
+---
 
-Create a `.env` file in the project root:
+## 4. Configure Environment Variables
+
+Create a `.env` file in the project root.
 
 ```env
 GOOGLE_API_KEY=YOUR_API_KEY
 ```
----
-
-# Running the Application
-
-## Step 1: Build the Vector Store
-
-Before using the assistant, index the documents into the FAISS vector database.
-
-```bash
-python scripts/build_vector_store.py
-```
-
-This will:
-
-- Load all supported documents
-- Generate embeddings using Gemini
-- Build the FAISS vector database
-- Save the index to:
-
-```
-data/vector_db/
-```
 
 ---
 
-## Step 2: Start the AI Assistant
+# Docker Deployment
+
+The application can be executed entirely inside Docker without manually installing Python or project dependencies.
+
+## Prerequisites
+
+Install:
+
+- Docker Desktop
+- Docker Compose
+
+Verify the installation:
 
 ```bash
-python app.py
+docker --version
+docker compose version
 ```
 
-Example:
+---
 
+## Build the Docker Image
+
+```bash
+docker compose build
 ```
+
+This command:
+
+- Builds the application image
+- Installs all dependencies
+- Copies the project into the container
+- Prepares the runtime environment
+
+---
+
+## Run the Application
+
+```bash
+docker compose up
+```
+
+Expected output:
+
+```text
 ============================================================
 RAG AI ASSISTANT
 ============================================================
@@ -253,10 +302,121 @@ RAG AI ASSISTANT
 Loading agent...
 Loading tools...
 
-Ready!
-
-You :
+Application ready.
 ```
+
+---
+
+## Stop the Container
+
+Press:
+
+```text
+Ctrl + C
+```
+
+Then remove the stopped container:
+
+```bash
+docker compose down
+```
+
+---
+
+## Rebuild After Changes
+
+Whenever dependencies or source files change:
+
+```bash
+docker compose up --build
+```
+
+---
+
+## Docker Files
+
+| File | Purpose |
+|------|---------|
+| Dockerfile | Defines the application image |
+| docker-compose.yml | Configures and runs the container |
+| .dockerignore | Excludes unnecessary files from the build context |
+
+---
+
+## Volume Mapping
+
+The project mounts the local `data/` directory into the container.
+
+Benefits:
+
+- Persistent FAISS vector database
+- Persistent uploaded documents
+- No need to rebuild the index after restarting the container
+
+---
+
+## Environment Variables
+
+Docker automatically loads the `.env` file specified in `docker-compose.yml`.
+
+Example:
+
+```env
+GOOGLE_API_KEY=YOUR_API_KEY
+```
+
+No additional Docker configuration is required.
+
+---
+# Running the Application
+
+## Step 1: Build the Vector Database
+
+Before querying the knowledge base, documents must be indexed into the FAISS vector store.
+
+Run:
+
+```bash
+python scripts/build_vector_store.py
+```
+
+This process performs the following steps:
+
+1. Loads supported documents from `data/documents/`
+2. Splits documents into chunks
+3. Generates embeddings using Google Gemini
+4. Stores embeddings inside the FAISS vector database
+
+The generated index is stored in:
+
+```text
+data/vector_db/
+```
+
+---
+
+## Step 2: Start the AI Assistant
+
+Run:
+
+```bash
+python app.py
+```
+
+Expected output:
+
+```text
+============================================================
+RAG AI ASSISTANT
+============================================================
+
+Loading agent...
+Loading tools...
+
+Application ready.
+```
+
+The assistant is now ready to answer questions.
 
 ---
 
@@ -270,6 +430,10 @@ Hello
 
 ```
 Who are you?
+```
+
+```
+Tell me something about yourself.
 ```
 
 ---
@@ -289,6 +453,10 @@ What are primary keys?
 ```
 
 ```
+What is database normalization?
+```
+
+```
 Tell me about the Whack-a-Mole project.
 ```
 
@@ -304,6 +472,10 @@ Tell me about the Whack-a-Mole project.
 150 / 6
 ```
 
+```
+sqrt(144)
+```
+
 ---
 
 ## File Reader Tool
@@ -312,12 +484,16 @@ Tell me about the Whack-a-Mole project.
 Read sample.txt
 ```
 
+```
+Open sample.txt
+```
+
 ---
 
 # Supported Document Formats
 
 | Format | Supported |
-|---------|-----------|
+|----------|-----------|
 | PDF | ✅ |
 | DOCX | ✅ |
 | Markdown | ✅ |
@@ -327,16 +503,16 @@ Read sample.txt
 
 # Retrieval Pipeline
 
-The retrieval workflow consists of the following stages:
+The Retrieval-Augmented Generation pipeline consists of several stages.
 
-```
+```text
 User Question
       │
       ▼
 Router LLM
       │
       ▼
-Hybrid Retrieval
+Hybrid Retriever
       │
  ┌────┴────┐
  ▼         ▼
@@ -346,10 +522,10 @@ FAISS     BM25
 Reciprocal Rank Fusion
       │
       ▼
-Cross Encoder Reranker
+Cross-Encoder Re-ranking
       │
       ▼
-Top Documents
+Top Ranked Documents
       │
       ▼
 Google Gemini
@@ -360,38 +536,124 @@ Grounded Response
 
 ---
 
+## Retrieval Process
+
+The retrieval workflow performs the following steps:
+
+1. Convert the user query into an embedding.
+2. Perform dense retrieval using FAISS.
+3. Perform sparse retrieval using BM25.
+4. Merge results using Reciprocal Rank Fusion.
+5. Re-rank retrieved documents using a Cross-Encoder.
+6. Select the highest-ranked document chunks.
+7. Generate a grounded response using Gemini.
+
+This combination significantly improves retrieval quality compared to using dense retrieval alone.
+
+---
+
 # AI Agent Workflow
 
-The LangGraph agent follows this workflow:
+The application uses **LangGraph** to orchestrate the Retrieval-Augmented Generation workflow.
+
+```text
+                     START
+                       │
+                       ▼
+                 Router Node
+                  /        \
+                 /          \
+        retrieve            generate
+            │                  │
+            ▼                  │
+     Retrieval Node            │
+            │                  │
+            └────────┬─────────┘
+                     ▼
+             Generation Node
+                     │
+                     ▼
+                    END
+```
+
+---
+
+## Router Node
+
+The Router Node determines whether the user's request requires retrieval.
+
+Examples requiring retrieval:
 
 ```
-START
-   │
-   ▼
-Router Node
-   │
-   ├──────────────┐
-   │              │
-retrieve      generate
-   │              │
-   ▼              │
-Retrieval Node    │
-   │              │
-   └──────┬───────┘
-          ▼
-Generation Node
-          │
-          ▼
-         END
+What is a database?
 ```
+
+```
+Explain normalization.
+```
+
+Examples that bypass retrieval:
+
+```
+Hello
+```
+
+```
+Thank you
+```
+
+---
+
+## Retrieval Node
+
+The Retrieval Node performs:
+
+- Hybrid Retrieval
+- Cross-Encoder Re-ranking
+- Context Construction
+
+The retrieved context is then passed to the Generation Node.
+
+---
+
+## Generation Node
+
+The Generation Node generates the final response.
+
+Two execution paths are supported:
+
+### Retrieved Context Available
+
+Gemini receives:
+
+- Retrieved Context
+- User Question
+
+and generates a grounded response.
+
+---
+
+### No Relevant Documents Found
+
+If retrieval does not return relevant context, the assistant responds with:
+
+```
+I don't know based on the provided documents.
+```
+
+This behavior reduces hallucinations and ensures responses remain grounded in the indexed knowledge base.
 
 ---
 
 # Running Tests
 
-Individual modules can be tested independently.
+Each component can be tested independently.
 
 Examples:
+
+```bash
+python tests/test_chunking.py
+```
 
 ```bash
 python tests/test_embeddings.py
@@ -417,35 +679,57 @@ python tests/test_calculator.py
 python tests/test_file_reader.py
 ```
 
+```bash
+python tests/test_tool_executor.py
+```
+
 ---
 
 # Evaluation
 
-Run the complete evaluation suite:
+The project includes an automated evaluation framework.
+
+Run:
 
 ```bash
 python evaluation/run_evaluation.py
 ```
 
-The evaluation automatically measures:
+The evaluation measures:
 
 - Retrieval quality
 - Response quality
 - Tool execution
 - Latency
-- Failure handling
+- Failure scenarios
 
-Results are written to:
+Evaluation outputs are written to:
 
-```
+```text
 evaluation/results.md
 ```
 
 A detailed analysis is available in:
 
-```
+```text
 evaluation/evaluation_report.md
 ```
+
+---
+
+# Evaluation Categories
+
+The evaluation suite contains representative queries covering:
+
+- Direct factual questions
+- Multi-step reasoning
+- Questions outside the knowledge base
+- Calculator Tool execution
+- File Reader Tool execution
+- General conversation
+- Failure scenarios
+
+This helps assess both retrieval performance and overall agent behavior.
 
 ---
 
@@ -454,64 +738,83 @@ evaluation/evaluation_report.md
 This project demonstrates:
 
 - End-to-End Retrieval-Augmented Generation
-- Hybrid Retrieval (Dense + Sparse)
-- Cross Encoder Re-ranking
+- Hybrid Dense + Sparse Retrieval
+- Reciprocal Rank Fusion
+- Cross-Encoder Re-ranking
 - LangGraph-based AI Agent
 - Tool Calling
 - Conversation Memory
-- Modular Software Design
 - Structured Logging
 - Automated Evaluation
+- Dockerized Deployment
 - Production Engineering Practices
 
 ---
-
 # Documentation
 
-Additional technical documentation is available in the `docs/` directory.
+Detailed technical documentation is available in the `docs/` directory.
 
 | Document | Description |
 |----------|-------------|
 | architecture.md | Overall system architecture |
-| agent_workflow.md | LangGraph workflow |
-| chunking_comparison.md | Chunking strategy comparison |
-| embeddings.md | Embedding model selection |
-| retrieval_optimization.md | Retrieval optimization techniques |
-| challenges_learnings.md | Challenges and lessons learned |
+| agent_workflow.md | LangGraph workflow and execution |
 | langgraph.md | LangGraph implementation details |
-
----
-# Future Improvements
-
-The current implementation provides a modular and production-ready RAG system. Future enhancements may include:
-
-- Long-term conversational memory
-- Streaming LLM responses
-- Multi-agent workflows
-- Web search integration
-- OCR support for scanned PDFs
-- Image and multimodal document understanding
-- Advanced evaluation metrics (Precision@K, Recall@K, MRR, nDCG)
-- Docker deployment
-- REST API using FastAPI
-- Web interface using Streamlit or React
-- Support for additional vector databases such as ChromaDB, PGVector, Pinecone, or Milvus
+| embeddings.md | Embedding model selection and semantic search |
+| chunking_comparison.md | Comparison of chunking strategies |
+| retrieval_optimization.md | Hybrid retrieval and optimization techniques |
+| challenges_learnings.md | Challenges faced and lessons learned |
 
 ---
 
 # Engineering Practices
 
-This project follows several software engineering best practices:
+The project follows modern software engineering principles to improve maintainability, extensibility, and code quality.
+
+## Software Design
 
 - Modular architecture
 - Separation of concerns
-- Type hints throughout the codebase
-- Abstract base classes for extensibility
-- Configuration through environment variables
+- Object-Oriented Design
+- Abstract Base Classes
+- Dependency Injection
+- Configurable components
+
+---
+
+## Code Quality
+
+- Type hints
+- Comprehensive docstrings
 - Structured logging
-- Comprehensive testing
-- Evaluation-driven development
-- Production-ready project structure
+- Error handling
+- Configuration through `.env`
+- Reusable utility modules
+
+---
+
+## Testing
+
+The project includes dedicated tests for individual modules including:
+
+- Document Processing
+- Embedding Generation
+- Vector Store
+- Retrieval
+- LangGraph Workflow
+- Calculator Tool
+- File Reader Tool
+- Tool Executor
+- Complete RAG Pipeline
+
+---
+
+## Deployment
+
+The application supports:
+
+- Local execution
+- Docker deployment
+- Docker Compose orchestration
 
 ---
 
@@ -519,16 +822,46 @@ This project follows several software engineering best practices:
 
 This project demonstrates practical understanding of:
 
-- Retrieval-Augmented Generation (RAG)
-- Large Language Models (LLMs)
-- Vector Databases
-- Embedding Models
+## Retrieval-Augmented Generation
+
+- Document ingestion
+- Chunking
+- Embeddings
+- Vector databases
+- Context retrieval
+- Grounded response generation
+
+---
+
+## Information Retrieval
+
+- Dense Retrieval
+- Sparse Retrieval
 - Hybrid Search
+- Reciprocal Rank Fusion
 - Cross-Encoder Re-ranking
-- LangGraph Workflows
-- Tool Calling
-- AI Agent Design
-- Production Software Engineering
+
+---
+
+## AI Agents
+
+- LangGraph
+- Graph-based workflows
+- State management
+- Conditional routing
+- Tool integration
+- Conversation memory
+
+---
+
+## Production Engineering
+
+- Modular architecture
+- Logging
+- Error handling
+- Evaluation framework
+- Docker
+- Documentation
 
 ---
 
@@ -538,17 +871,25 @@ This project demonstrates practical understanding of:
 
 ✔ Three chunking strategies
 
-✔ Gemini Embeddings
+✔ Google Gemini Embeddings
 
 ✔ FAISS Vector Database
 
-✔ Hybrid Retrieval (Dense + Sparse)
+✔ BM25 Sparse Retrieval
+
+✔ Hybrid Retrieval
+
+✔ Reciprocal Rank Fusion
 
 ✔ Cross-Encoder Re-ranking
 
-✔ LangGraph-based AI Agent
+✔ LangGraph AI Agent
 
-✔ Tool Routing
+✔ Router Node
+
+✔ Retrieval Node
+
+✔ Generation Node
 
 ✔ Calculator Tool
 
@@ -560,7 +901,53 @@ This project demonstrates practical understanding of:
 
 ✔ Automated Evaluation Framework
 
-✔ Modular Architecture
+✔ Dockerized Deployment
+
+✔ Production-Ready Modular Architecture
+
+---
+
+# Future Improvements
+
+Although the current implementation provides a complete production-oriented RAG system, several future enhancements are possible.
+
+## AI Capabilities
+
+- Long-term conversational memory
+- Multi-agent collaboration
+- Planning and reasoning agents
+- Reflection and self-correction
+- Web search integration
+
+---
+
+## Retrieval
+
+- Adaptive chunking
+- Additional embedding models
+- Advanced retrieval metrics
+- Query expansion
+- Vector database benchmarking
+
+---
+
+## Deployment
+
+- FastAPI REST API
+- Streamlit web interface
+- React frontend
+- Kubernetes deployment
+- CI/CD using GitHub Actions
+
+---
+
+## Monitoring
+
+- LLM usage analytics
+- Token tracking
+- Performance dashboards
+- Observability
+- Production monitoring
 
 ---
 
@@ -568,7 +955,7 @@ This project demonstrates practical understanding of:
 
 This project was developed as part of the **Week 3 Internship** at **Cognitio Analytics**.
 
-The implementation leverages the following open-source technologies:
+The implementation makes use of several excellent open-source projects, including:
 
 - LangChain
 - LangGraph
@@ -576,7 +963,9 @@ The implementation leverages the following open-source technologies:
 - FAISS
 - Sentence Transformers
 - Hugging Face Transformers
-- BM25 (rank-bm25)
+- rank-bm25
+- PyPDF
+- python-docx
 
 Special thanks to the Cognitio Analytics team for providing the internship roadmap and learning objectives that guided the development of this project.
 
@@ -584,7 +973,7 @@ Special thanks to the Cognitio Analytics team for providing the internship roadm
 
 # License
 
-This project was developed for educational and internship purposes.
+This repository was developed for educational and internship purposes.
 
 ---
 
@@ -592,14 +981,38 @@ This project was developed for educational and internship purposes.
 
 **Antra Agarwal**
 
-B.Tech Computer Science Engineering
+B.Tech – Computer Science Engineering
 
 Shiv Nadar Institution of Eminence
 
 ---
 
-## Project Status
+# Project Status
 
-**Week 3 Internship Project — Completed**
+## ✅ Week 3 Internship Project — Completed
 
-This project demonstrates a complete Retrieval-Augmented Generation (RAG) pipeline with hybrid retrieval, LangGraph-based agent orchestration, tool integration, evaluation, and production engineering practices. It serves as a modular foundation for building scalable AI assistants and can be extended with additional tools, memory mechanisms, and deployment options.
+### Deliverables Completed
+
+- Complete Document Processing Pipeline
+- Multiple Chunking Strategies
+- Google Gemini Embeddings
+- FAISS Vector Database
+- Hybrid Retrieval
+- Cross-Encoder Re-ranking
+- LangGraph AI Agent
+- Tool Calling Framework
+- Conversation Memory
+- Automated Evaluation
+- Technical Documentation
+- Dockerized Deployment
+- Production Engineering Practices
+
+The project demonstrates a complete Retrieval-Augmented Generation (RAG) system capable of indexing documents, retrieving relevant context using hybrid search, executing external tools, orchestrating workflows with LangGraph, and generating grounded responses using Google Gemini.
+
+The modular architecture and production-oriented design make the project suitable as a foundation for future AI assistants and enterprise GenAI applications.
+
+---
+
+## Repository Summary
+
+This project showcases the implementation of a production-grade Retrieval-Augmented Generation (RAG) AI assistant developed using modern AI frameworks and software engineering best practices. It combines document ingestion, semantic retrieval, hybrid search, AI agent orchestration, external tool execution, evaluation, logging, documentation, and Dockerized deployment into a scalable and extensible architecture.
