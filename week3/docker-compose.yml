@@ -1,0 +1,15 @@
+services:
+  rag-agent:
+    build: .
+    container_name: rag-agent
+
+    stdin_open: true
+    tty: true
+
+    env_file:
+      - .env
+
+    volumes:
+      - ./data:/app/data
+
+    restart: unless-stopped
