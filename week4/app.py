@@ -1,15 +1,15 @@
 """
 Week 4 - Advanced RAG Application
 
-Reuses Week 3:
+Reuses Week 3 components:
 - Google Embeddings
-- FAISS
+- FAISS Vector Store
 - BM25
 - Hybrid Retrieval
-- Cross Encoder
+- Cross-Encoder Reranking
 - Gemini LLM
 
-Adds:
+Adds Week 4 capabilities:
 - Query rewriting
 - Query expansion
 - Multi-query retrieval
@@ -20,7 +20,10 @@ Adds:
 
 from dotenv import load_dotenv
 
-# Week 3 components
+# ============================================================
+# Week 3 Components
+# ============================================================
+
 from week3.src.embeddings.google_embedding_model import (
     GoogleEmbeddingModel,
 )
@@ -43,7 +46,11 @@ from week3.src.rerankers import (
     CrossEncoderReranker,
 )
 
-# Week 4 components
+
+# ============================================================
+# Week 4 Components
+# ============================================================
+
 from week4.src.query.query_transformer import (
     QueryTransformer,
 )
@@ -53,8 +60,45 @@ from week4.src.rag.advanced_rag import (
 )
 
 
+# ============================================================
+# Configuration
+# ============================================================
+
 VECTOR_DB_PATH = "week3/data/vector_db"
 
+
+# ============================================================
+# Metadata Filter
+# ============================================================
+
+def get_metadata_filter():
+    """
+    Ask the user whether they want to restrict the
+    search to a particular document.
+    """
+
+    print("\nMetadata Filter")
+    print("-" * 40)
+
+    print("1. Search all documents")
+    print("2. Search Introduction to Database.pdf")
+
+    choice = input("Select option [1]: ").strip()
+
+    if choice == "2":
+
+        return {
+            "source": (
+                "data\\documents\\Introduction to Database.pdf"
+            )
+        }
+
+    return None
+
+
+# ============================================================
+# Initialize Advanced RAG
+# ============================================================
 
 def initialize_rag():
 
@@ -62,9 +106,9 @@ def initialize_rag():
 
     embedding_model = GoogleEmbeddingModel()
 
-    # -----------------------------------------
+    # --------------------------------------------------------
     # Load existing Week 3 FAISS database
-    # -----------------------------------------
+    # --------------------------------------------------------
 
     print("Loading vector database...")
 
@@ -72,59 +116,63 @@ def initialize_rag():
 
     vector_store.load(VECTOR_DB_PATH)
 
-    # -----------------------------------------
-    # Dense retrieval
-    # -----------------------------------------
+    # --------------------------------------------------------
+    # Dense Retriever
+    # --------------------------------------------------------
 
     vector_retriever = VectorStoreRetriever(
         embedding_model=embedding_model,
         vector_store=vector_store,
     )
 
-    # -----------------------------------------
-    # BM25 retrieval
-    # -----------------------------------------
+    # --------------------------------------------------------
+    # Sparse Retriever
+    # --------------------------------------------------------
 
     bm25_retriever = BM25Retriever(
         vector_store=vector_store,
     )
 
-    # -----------------------------------------
-    # Hybrid retrieval
-    # -----------------------------------------
+    # --------------------------------------------------------
+    # Hybrid Retriever
+    # --------------------------------------------------------
 
     retriever = HybridRetriever(
         vector_retriever=vector_retriever,
         bm25_retriever=bm25_retriever,
     )
 
-    # -----------------------------------------
-    # Cross encoder
-    # -----------------------------------------
+    # --------------------------------------------------------
+    # Cross Encoder Reranker
+    # --------------------------------------------------------
+
+    print("Loading reranker...")
 
     reranker = CrossEncoderReranker()
 
-    # -----------------------------------------
-    # LLM
-    # -----------------------------------------
+    # --------------------------------------------------------
+    # Generator LLM
+    # --------------------------------------------------------
 
     llm = GoogleLLM(
         temperature=0.2,
     )
 
-    # -----------------------------------------
-    # Query transformer
-    # -----------------------------------------
+    # --------------------------------------------------------
+    # Query Transformer
+    # --------------------------------------------------------
 
-    query_transformer = QueryTransformer(
-        llm=GoogleLLM(
-            temperature=0.0,
-        )
+    query_llm = GoogleLLM(
+        temperature=0.0,
     )
 
-    # -----------------------------------------
+    query_transformer = QueryTransformer(
+        llm=query_llm,
+    )
+
+    # --------------------------------------------------------
     # Advanced RAG
-    # -----------------------------------------
+    # --------------------------------------------------------
 
     return AdvancedRAG(
         retriever=retriever,
@@ -136,6 +184,10 @@ def initialize_rag():
     )
 
 
+# ============================================================
+# Main Application
+# ============================================================
+
 def main():
 
     load_dotenv()
@@ -144,40 +196,100 @@ def main():
     print("WEEK 4 - ADVANCED RAG")
     print("=" * 60)
 
+    print()
+
+    # --------------------------------------------------------
+    # Initialize RAG
+    # --------------------------------------------------------
+
     rag = initialize_rag()
 
-    print("\nApplication ready.")
-    print("Type 'exit' to quit.\n")
+    print()
+    print("Application ready.")
+    print("Type 'exit' to quit.")
+
+    # --------------------------------------------------------
+    # Conversation loop
+    # --------------------------------------------------------
 
     while True:
 
+        print()
+
         question = input("You: ").strip()
 
+        # ----------------------------------------------------
+        # Exit
+        # ----------------------------------------------------
+
         if question.lower() == "exit":
+            print("\nGoodbye!")
             break
 
+        # ----------------------------------------------------
+        # Empty question
+        # ----------------------------------------------------
+
         if not question:
+
+            print(
+                "Please enter a question."
+            )
+
             continue
 
-        response = rag.answer(
-            question=question,
-        )
+        # ----------------------------------------------------
+        # Metadata filtering
+        # ----------------------------------------------------
+
+        metadata_filter = get_metadata_filter()
+
+        # ----------------------------------------------------
+        # Advanced RAG
+        # ----------------------------------------------------
+
+        try:
+
+            response = rag.answer(
+                question=question,
+                metadata_filter=metadata_filter,
+            )
+
+        except Exception as error:
+
+            print("\nError while processing request:")
+            print(error)
+
+            continue
+
+        # ----------------------------------------------------
+        # Display answer
+        # ----------------------------------------------------
 
         print("\nAssistant:")
         print(response["answer"])
 
+        # ----------------------------------------------------
+        # Display sources
+        # ----------------------------------------------------
+
         print("\nSources:")
 
-        if response["sources"]:
+        sources = response.get("sources", [])
 
-            for source in response["sources"]:
+        if sources:
+
+            for source in sources:
                 print(f"  - {source}")
 
         else:
+
             print("  No sources found.")
 
-        print()
 
+# ============================================================
+# Entry Point
+# ============================================================
 
 if __name__ == "__main__":
     main()
