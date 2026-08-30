@@ -1,9 +1,0 @@
-chunker,chunk_size,overlap,num_chunks,avg_length,min_length,max_length,time_seconds
-Fixed,300,30,54,272.04,107,298,0.0043
-Fixed,500,50,32,473.66,278,499,0.004
-Fixed,800,80,20,770.05,631,796,0.0015
-Fixed,1000,100,16,963.62,750,999,0.0013
-Recursive,300,30,56,261.7,94,298,0.0042
-Recursive,500,50,35,425.49,94,495,0.0025
-Recursive,800,80,23,661.04,94,797,0.002
-Recursive,1000,100,19,789.63,94,998,0.0053

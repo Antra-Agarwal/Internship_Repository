@@ -1,0 +1,392 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "description": "Week 4 RAG evaluation dataset",
+    "documents": [
+      "Introduction to Database.pdf",
+      "Technical Documentation.pdf"
+    ],
+    "total_questions": 36
+  },
+
+  "questions": [
+
+    {
+      "id": "Q01",
+      "category": "simple_factual",
+      "question": "What is a database?",
+      "expected_answer": "A database is a collection of related data.",
+      "expected_sources": [
+        "Introduction to Database.pdf"
+      ],
+      "should_answer": true
+    },
+
+    {
+      "id": "Q02",
+      "category": "simple_factual",
+      "question": "What is an operating system?",
+      "expected_answer": null,
+      "expected_sources": [],
+      "should_answer": false
+    },
+
+    {
+      "id": "Q03",
+      "category": "simple_factual",
+      "question": "What is abstraction in the Whack-A-Mole game?",
+      "expected_answer": "Abstraction is implemented using the abstract class HoleOccupant, which encapsulates shared traits such as visibility and remaining lifetime.",
+      "expected_sources": [
+        "Technical Documentation.pdf"
+      ],
+      "should_answer": true
+    },
+
+    {
+      "id": "Q04",
+      "category": "simple_factual",
+      "question": "Which classes extend HoleOccupant?",
+      "expected_answer": "Mole, Bomb, and BonusMole extend HoleOccupant.",
+      "expected_sources": [
+        "Technical Documentation.pdf"
+      ],
+      "should_answer": true
+    },
+
+    {
+      "id": "Q05",
+      "category": "simple_factual",
+      "question": "What is polymorphism in the Whack-A-Mole game?",
+      "expected_answer": "When a button is clicked, the system gives points according to whether the object is a mole, bomb, or bonus mole without needing to explicitly identify its type.",
+      "expected_sources": [
+        "Technical Documentation.pdf"
+      ],
+      "should_answer": true
+    },
+
+    {
+      "id": "Q06",
+      "category": "simple_factual",
+      "question": "What is encapsulated inside GameEngine?",
+      "expected_answer": "Game-state variables are kept private inside GameEngine.",
+      "expected_sources": [
+        "Technical Documentation.pdf"
+      ],
+      "should_answer": true
+    },
+
+    {
+      "id": "Q07",
+      "category": "simple_factual",
+      "question": "Why does the Whack-A-Mole game use multithreading?",
+      "expected_answer": "Multithreading allows the game loop, mole spawning, and timer to run while keeping the user interface responsive to clicks.",
+      "expected_sources": [
+        "Technical Documentation.pdf"
+      ],
+      "should_answer": true
+    },
+
+    {
+      "id": "Q08",
+      "category": "simple_factual",
+      "question": "Which method is used to safely update Swing components from the game engine?",
+      "expected_answer": "SwingUtilities.invokeLater(...) is used to update the Swing UI safely.",
+      "expected_sources": [
+        "Technical Documentation.pdf"
+      ],
+      "should_answer": true
+    },
+
+    {
+      "id": "Q09",
+      "category": "multi_document",
+      "question": "What technologies or concepts are demonstrated across the database document and the Whack-A-Mole documentation?",
+      "expected_answer": "The documents cover database concepts in the database material and Java object-oriented programming, inheritance, polymorphism, encapsulation, abstraction, multithreading, and exception handling in the Whack-A-Mole documentation.",
+      "expected_sources": [
+        "Introduction to Database.pdf",
+        "Technical Documentation.pdf"
+      ],
+      "should_answer": true
+    },
+
+    {
+      "id": "Q10",
+      "category": "multi_document",
+      "question": "Which document discusses databases and which document discusses a Java game?",
+      "expected_answer": "Introduction to Database.pdf discusses databases, while Technical Documentation.pdf discusses the Whack-A-Mole Java game.",
+      "expected_sources": [
+        "Introduction to Database.pdf",
+        "Technical Documentation.pdf"
+      ],
+      "should_answer": true
+    },
+
+    {
+      "id": "Q11",
+      "category": "multi_document",
+      "question": "Which document contains information about inheritance and which document contains information about database concepts?",
+      "expected_answer": "Technical Documentation.pdf contains information about inheritance, while Introduction to Database.pdf contains database concepts.",
+      "expected_sources": [
+        "Introduction to Database.pdf",
+        "Technical Documentation.pdf"
+      ],
+      "should_answer": true
+    },
+
+    {
+      "id": "Q12",
+      "category": "multi_document",
+      "question": "What type of application is described in the technical documentation, and what is the main subject of the other document?",
+      "expected_answer": "The technical documentation describes a Whack-A-Mole game, while the other document focuses on databases.",
+      "expected_sources": [
+        "Introduction to Database.pdf",
+        "Technical Documentation.pdf"
+      ],
+      "should_answer": true
+    },
+
+    {
+      "id": "Q13",
+      "category": "multi_document",
+      "question": "Which document would you consult to learn about Java threading, and which would you consult to learn about databases?",
+      "expected_answer": "Technical Documentation.pdf covers Java threading, while Introduction to Database.pdf covers databases.",
+      "expected_sources": [
+        "Introduction to Database.pdf",
+        "Technical Documentation.pdf"
+      ],
+      "should_answer": true
+    },
+
+    {
+      "id": "Q14",
+      "category": "multi_document",
+      "question": "What are the two major subject areas represented by the available knowledge base?",
+      "expected_answer": "The knowledge base covers database concepts and the technical implementation of a Java Whack-A-Mole game.",
+      "expected_sources": [
+        "Introduction to Database.pdf",
+        "Technical Documentation.pdf"
+      ],
+      "should_answer": true
+    },
+
+    {
+      "id": "Q15",
+      "category": "reasoning",
+      "question": "Why would running the game loop on the main thread make the Whack-A-Mole game difficult to use?",
+      "expected_answer": "The buttons could freeze because the main thread would be busy running the game loop, preventing it from handling user clicks responsively.",
+      "expected_sources": [
+        "Technical Documentation.pdf"
+      ],
+      "should_answer": true
+    },
+
+    {
+      "id": "Q16",
+      "category": "reasoning",
+      "question": "Why is SwingUtilities.invokeLater(...) needed in the Whack-A-Mole game?",
+      "expected_answer": "Because the engine runs in a background thread and Swing UI updates need to be performed safely through the Event Dispatch Thread.",
+      "expected_sources": [
+        "Technical Documentation.pdf"
+      ],
+      "should_answer": true
+    },
+
+    {
+      "id": "Q17",
+      "category": "reasoning",
+      "question": "How do inheritance and polymorphism work together in the Whack-A-Mole game?",
+      "expected_answer": "Mole, Bomb, and BonusMole inherit common behavior from HoleOccupant, while polymorphism allows the game to handle the different occupants through their common behavior and assign their respective points.",
+      "expected_sources": [
+        "Technical Documentation.pdf"
+      ],
+      "should_answer": true
+    },
+
+    {
+      "id": "Q18",
+      "category": "reasoning",
+      "question": "Why is Thread.sleep(1000) wrapped in a try-catch block?",
+      "expected_answer": "Because Thread.sleep can throw InterruptedException, which needs to be handled when the engine thread is interrupted.",
+      "expected_sources": [
+        "Technical Documentation.pdf"
+      ],
+      "should_answer": true
+    },
+
+    {
+      "id": "Q19",
+      "category": "reasoning",
+      "question": "What would happen if the game engine directly modified Swing components instead of using the described UI update mechanism?",
+      "expected_answer": "It could violate Swing's threading model because the engine runs on a background thread while Swing components should be updated through the Event Dispatch Thread.",
+      "expected_sources": [
+        "Technical Documentation.pdf"
+      ],
+      "should_answer": true
+    },
+
+    {
+      "id": "Q20",
+      "category": "reasoning",
+      "question": "Why is InvalidGameStateException described as an unchecked exception?",
+      "expected_answer": "It extends the runtime exception category and represents situations that should not normally occur, such as trying to spawn an object when no free hole exists.",
+      "expected_sources": [
+        "Technical Documentation.pdf"
+      ],
+      "should_answer": true
+    },
+
+    {
+      "id": "Q21",
+      "category": "ambiguous",
+      "question": "What does the game use to keep running?",
+      "expected_answer": "The game uses a background GameEngine thread and multithreading so the game loop can continue while the UI remains responsive.",
+      "expected_sources": [
+        "Technical Documentation.pdf"
+      ],
+      "should_answer": true
+    },
+
+    {
+      "id": "Q22",
+      "category": "ambiguous",
+      "question": "What is the main class mentioned in the encapsulation example?",
+      "expected_answer": "GameEngine is the class whose game-state variables are private.",
+      "expected_sources": [
+        "Technical Documentation.pdf"
+      ],
+      "should_answer": true
+    },
+
+    {
+      "id": "Q23",
+      "category": "ambiguous",
+      "question": "What kind of exception handles saved scores?",
+      "expected_answer": "HighScoreException is the checked exception associated with saving and loading top scores through Java serialization.",
+      "expected_sources": [
+        "Technical Documentation.pdf"
+      ],
+      "should_answer": true
+    },
+
+    {
+      "id": "Q24",
+      "category": "ambiguous",
+      "question": "What does 'hole' refer to in the technical documentation?",
+      "expected_answer": "A hole is a position in the game's grid where game objects such as moles, bombs, or bonus moles can appear.",
+      "expected_sources": [
+        "Technical Documentation.pdf"
+      ],
+      "should_answer": true
+    },
+
+    {
+      "id": "Q25",
+      "category": "ambiguous",
+      "question": "What kind of objects are mentioned in the game?",
+      "expected_answer": "The game contains Mole, Bomb, and BonusMole objects, which extend HoleOccupant.",
+      "expected_sources": [
+        "Technical Documentation.pdf"
+      ],
+      "should_answer": true
+    },
+
+    {
+      "id": "Q26",
+      "category": "outside_knowledge_base",
+      "question": "Who invented the telephone?",
+      "expected_answer": null,
+      "expected_sources": [],
+      "should_answer": false
+    },
+
+    {
+      "id": "Q27",
+      "category": "outside_knowledge_base",
+      "question": "What is the capital of France?",
+      "expected_answer": null,
+      "expected_sources": [],
+      "should_answer": false
+    },
+
+    {
+      "id": "Q28",
+      "category": "outside_knowledge_base",
+      "question": "Explain how photosynthesis works.",
+      "expected_answer": null,
+      "expected_sources": [],
+      "should_answer": false
+    },
+
+    {
+      "id": "Q29",
+      "category": "outside_knowledge_base",
+      "question": "What is the current price of Bitcoin?",
+      "expected_answer": null,
+      "expected_sources": [],
+      "should_answer": false
+    },
+
+    {
+      "id": "Q30",
+      "category": "outside_knowledge_base",
+      "question": "Who is the current president of the United States?",
+      "expected_answer": null,
+      "expected_sources": [],
+      "should_answer": false
+    },
+
+    {
+      "id": "Q31",
+      "category": "outside_knowledge_base",
+      "question": "What is the weather in Meerut today?",
+      "expected_answer": null,
+      "expected_sources": [],
+      "should_answer": false
+    },
+
+    {
+      "id": "Q32",
+      "category": "irrelevant_information",
+      "question": "The document mentions databases. What is the recipe for making pizza?",
+      "expected_answer": null,
+      "expected_sources": [],
+      "should_answer": false
+    },
+
+    {
+      "id": "Q33",
+      "category": "irrelevant_information",
+      "question": "The game uses Java. What is the population of Japan?",
+      "expected_answer": null,
+      "expected_sources": [],
+      "should_answer": false
+    },
+
+    {
+      "id": "Q34",
+      "category": "irrelevant_information",
+      "question": "The game contains a timer. What is the distance between Earth and Mars?",
+      "expected_answer": null,
+      "expected_sources": [],
+      "should_answer": false
+    },
+
+    {
+      "id": "Q35",
+      "category": "irrelevant_information",
+      "question": "A database contains related data. What is the boiling point of gold?",
+      "expected_answer": null,
+      "expected_sources": [],
+      "should_answer": false
+    },
+
+    {
+      "id": "Q36",
+      "category": "irrelevant_information",
+      "question": "The game uses multithreading. Who won the latest FIFA World Cup?",
+      "expected_answer": null,
+      "expected_sources": [],
+      "should_answer": false
+    }
+  ]
+}
